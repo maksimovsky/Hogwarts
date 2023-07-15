@@ -11,7 +11,7 @@ import java.util.Collection;
 @RequestMapping("/faculty")
 @RestController
 public class FacultyController {
-    FacultyServiceImpl service;
+    private final FacultyServiceImpl service;
 
     public FacultyController(FacultyServiceImpl service) {
         this.service = service;
@@ -23,9 +23,8 @@ public class FacultyController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> add(Faculty faculty) {
-        Faculty faculty1 = service.add(faculty);
-        return validate(faculty1);
+    public ResponseEntity<Object> add(@RequestBody Faculty faculty) {
+        return validate(service.add(faculty));
     }
 
     @GetMapping("{id}")
@@ -39,8 +38,8 @@ public class FacultyController {
     }
 
     @PutMapping
-    public ResponseEntity<Object> editFaculty(Faculty faculty) {
-        return validate(service.editFaculty(faculty.getId(), faculty));
+    public ResponseEntity<Object> editFaculty(@RequestBody Faculty faculty) {
+        return validate(service.editFaculty(faculty));
     }
 
     @GetMapping("color/{color}")
@@ -48,16 +47,14 @@ public class FacultyController {
         Collection<Faculty> faculties = service.getSameColorFaculties(color);
         if (faculties.size() == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        } else {
-            return ResponseEntity.ok(faculties);
         }
+        return ResponseEntity.ok(faculties);
     }
 
     private ResponseEntity<Object> validate(Faculty faculty) {
         if (faculty == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        } else {
-            return ResponseEntity.ok(faculty);
         }
+        return ResponseEntity.ok(faculty);
     }
 }

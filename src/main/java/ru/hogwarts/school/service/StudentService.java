@@ -11,7 +11,7 @@ public interface StudentService {
 
     Student removeStudentById(Integer id);
 
-    Student editStudent(Integer id, Student student);
+    Student editStudent(Student student);
 
     Collection<Student> getSameAgeStudents(Integer age);
 }

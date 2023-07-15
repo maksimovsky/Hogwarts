@@ -39,19 +39,16 @@ public class StudentServiceImpl implements StudentService {
         if (!students.containsKey(id)) {
             return null;
         }
-        Student student = students.get(id);
-        students.remove(id);
-        return student;
+        return students.remove(id);
     }
 
     @Override
-    public Student editStudent(Integer id, Student student) {
-        if (!students.containsKey(id)) {
+    public Student editStudent(Student student) {
+        if (!students.containsKey(student.getId())) {
             return null;
         }
-        students.get(id).setName(student.getName());
-        students.get(id).setAge(student.getAge());
-        return students.get(id);
+        students.put(student.getId(), student);
+        return student;
     }
 
     @Override

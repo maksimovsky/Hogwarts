@@ -11,7 +11,7 @@ public interface FacultyService {
 
     Faculty removeFacultyById(Integer id);
 
-    Faculty editFaculty(Integer id, Faculty faculty);
+    Faculty editFaculty(Faculty faculty);
 
     Collection<Faculty> getSameColorFaculties(String color);
 }

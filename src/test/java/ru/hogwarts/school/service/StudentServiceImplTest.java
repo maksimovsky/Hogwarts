@@ -45,7 +45,7 @@ class StudentServiceImplTest {
     void editStudent() {
         Student expected = new Student(1, "st2", 16);
         out.add(new Student(435, "st1", 14));
-        assertEquals(expected, out.editStudent(1, expected));
+        assertEquals(expected, out.editStudent(expected));
         assertTrue(out.getAll().contains(expected));
 
         out.removeStudentById(1);

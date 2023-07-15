@@ -39,27 +39,24 @@ public class FacultyServiceImpl implements FacultyService {
         if (!faculties.containsKey(id)) {
             return null;
         }
-        Faculty faculty = faculties.get(id);
-        faculties.remove(id);
-        return faculty;
+        return faculties.remove(id);
     }
 
     @Override
-    public Faculty editFaculty(Integer id, Faculty faculty) {
-        if (!faculties.containsKey(id)) {
+    public Faculty editFaculty(Faculty faculty) {
+        if (!faculties.containsKey(faculty.getId())) {
             return null;
         }
-        faculties.get(id).setName(faculty.getName());
-        faculties.get(id).setColor(faculty.getColor());
-        return faculties.get(id);
+        faculties.put(faculty.getId(), faculty);
+        return faculty;
     }
 
     @Override
     public Collection<Faculty> getSameColorFaculties(String color) {
         Collection<Faculty> sameColorFaculties = new ArrayList<>();
-        for (Faculty s : faculties.values()) {
-            if (s.getColor().equals(color)) {
-                sameColorFaculties.add(s);
+        for (Faculty f : faculties.values()) {
+            if (f.getColor().equals(color)) {
+                sameColorFaculties.add(f);
             }
         }
         return sameColorFaculties;

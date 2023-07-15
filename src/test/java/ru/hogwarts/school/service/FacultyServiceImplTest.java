@@ -51,7 +51,7 @@ class FacultyServiceImplTest {
     void editFaculty() {
         Faculty expected = new Faculty(1, "faculty2", "color2");
         out.add(new Faculty(435, "faculty1", "color1"));
-        assertEquals(expected, out.editFaculty(1, expected));
+        assertEquals(expected, out.editFaculty(expected));
         assertTrue(out.getAll().contains(expected));
 
         out.removeFacultyById(1);

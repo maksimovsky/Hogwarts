@@ -2,63 +2,45 @@ package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.StudentRepository;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 
 @Service
 public class StudentServiceImpl implements StudentService {
-    private static final HashMap<Integer, Student> students = new HashMap<>();
-    private Integer id = 0;
+
+    private final StudentRepository repository;
+
+    public StudentServiceImpl(StudentRepository repository) {
+        this.repository = repository;
+    }
 
     public Collection<Student> getAll() {
-        return students.values().stream().toList();
+        return repository.findAll();
     }
 
     @Override
     public Student add(Student student) {
-        if (students.containsValue(student)) {
-            return null;
-        }
-        student.setId(++id);
-        students.put(id, student);
-        return student;
+        return repository.save(student);
     }
 
     @Override
     public Student getStudentById(Integer id) {
-        if (!students.containsKey(id)) {
-            return null;
-        }
-        return students.get(id);
+        return repository.findById(id).get();
     }
 
     @Override
-    public Student removeStudentById(Integer id) {
-        if (!students.containsKey(id)) {
-            return null;
-        }
-        return students.remove(id);
+    public void removeStudentById(Integer id) {
+        repository.deleteById(id);
     }
 
     @Override
     public Student editStudent(Student student) {
-        if (!students.containsKey(student.getId())) {
-            return null;
-        }
-        students.put(student.getId(), student);
-        return student;
+        return repository.save(student);
     }
 
     @Override
     public Collection<Student> getSameAgeStudents(Integer age) {
-        Collection<Student> sameAgeStudents = new ArrayList<>();
-        for (Student s : students.values()) {
-            if (s.getAge() == age) {
-                sameAgeStudents.add(s);
-            }
-        }
-        return sameAgeStudents;
+        return repository.findByAge(age);
     }
 }

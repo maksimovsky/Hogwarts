@@ -34,7 +34,8 @@ public class StudentController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Object> removeStudentById(@PathVariable Integer id) {
-        return validate(service.removeStudentById(id));
+        service.removeStudentById(id);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping

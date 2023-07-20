@@ -9,7 +9,7 @@ public interface StudentService {
 
     Student getStudentById(Integer id);
 
-    Student removeStudentById(Integer id);
+    void removeStudentById(Integer id);
 
     Student editStudent(Student student);
 

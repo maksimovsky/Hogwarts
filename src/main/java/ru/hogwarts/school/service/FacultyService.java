@@ -9,7 +9,7 @@ public interface FacultyService {
 
     Faculty getFacultyById(Integer id);
 
-    Faculty removeFacultyById(Integer id);
+    void removeFacultyById(Integer id);
 
     Faculty editFaculty(Faculty faculty);
 

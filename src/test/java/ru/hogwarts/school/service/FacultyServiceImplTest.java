@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.Collection;
@@ -74,9 +75,9 @@ class FacultyServiceImplTest {
         Collection<Faculty> color2 = List.of(f2, f5);
         Collection<Faculty> color3 = List.of(f3);
 
-        when(repositoryMock.findByColor("color1")).thenReturn(color1);
-        when(repositoryMock.findByColor("color2")).thenReturn(color2);
-        when(repositoryMock.findByColor("color3")).thenReturn(color3);
+        when(repositoryMock.findByColorIgnoreCase("color1")).thenReturn(color1);
+        when(repositoryMock.findByColorIgnoreCase("color2")).thenReturn(color2);
+        when(repositoryMock.findByColorIgnoreCase("color3")).thenReturn(color3);
 
         assertEquals(color1, out.getSameColorFaculties("color1"));
         assertEquals(color2, out.getSameColorFaculties("color2"));
@@ -95,5 +96,31 @@ class FacultyServiceImplTest {
 
         when(repositoryMock.findAll()).thenReturn(faculties);
         assertEquals(faculties, out.getAll());
+    }
+
+    @Test
+    void getByNameOrColor() {
+        Collection<Faculty> faculties = List.of(
+                new Faculty(1, "f1", "color1"),
+                new Faculty(2, "f2", "color2"),
+                new Faculty(3, "qwerty", "color-f")
+        );
+        when(repositoryMock.findByNameIgnoreCaseContainsOrColorIgnoreCaseContains("f", "f"))
+                .thenReturn(faculties);
+
+        assertEquals(faculties, out.getByNameOrColor("f"));
+    }
+
+    @Test
+    void getStudentsByFacultyId() {
+        Collection<Student> students = List.of(
+                new Student(1, "s1", 12),
+                new Student(2,"s2", 13)
+        );
+        Faculty faculty = new Faculty(1, "f1", "color1");
+        faculty.setStudents(students);
+        when(repositoryMock.findById(1)).thenReturn(Optional.of(faculty));
+
+        assertEquals(students, out.getStudentsByFacultyId(1));
     }
 }

@@ -1,6 +1,7 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
@@ -26,7 +27,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student getStudentById(Integer id) {
-        return repository.findById(id).get();
+        return repository.findById(id).orElse(null);
     }
 
     @Override
@@ -42,5 +43,15 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Collection<Student> getSameAgeStudents(Integer age) {
         return repository.findByAge(age);
+    }
+
+    @Override
+    public Collection<Student> findByAgeBetween(int from, int to) {
+        return repository.findByAgeBetween(from, to);
+    }
+
+    @Override
+    public Faculty getFacultyByStudentId(int id) {
+        return getStudentById(id).getFaculty();
     }
 }

@@ -43,19 +43,32 @@ public class StudentController {
         return validate(service.editStudent(student));
     }
 
-    @GetMapping("age/{age}")
-    public ResponseEntity<Collection<Student>> getSameAgeStudents(@PathVariable Integer age) {
-        Collection<Student> students = service.getSameAgeStudents(age);
-        if (students.size() == 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        return ResponseEntity.ok(students);
+    @GetMapping("age")
+    public ResponseEntity<Collection<Student>> getSameAgeStudents(@RequestParam Integer age) {
+        return validate(service.getSameAgeStudents(age));
     }
 
-    private ResponseEntity<Object> validate(Student student) {
-        if (student == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    @GetMapping("/ages")
+    public ResponseEntity<Collection<Student>> getByAge(@RequestParam int from, @RequestParam int to) {
+        return validate(service.findByAgeBetween(from, to));
+    }
+
+    @GetMapping("{id}/faculty")
+    public ResponseEntity<Object> getFacultyByStudentId(@PathVariable int id) {
+        return validate(service.getFacultyByStudentId(id));
+    }
+
+    private static ResponseEntity<Object> validate(Object o) {
+        if (o == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-        return ResponseEntity.ok(student);
+        return ResponseEntity.ok(o);
+    }
+
+    private static ResponseEntity<Collection<Student>> validate(Collection<Student> students) {
+        if (students.size() == 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok(students);
     }
 }

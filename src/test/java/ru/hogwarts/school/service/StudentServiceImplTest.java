@@ -96,4 +96,22 @@ class StudentServiceImplTest {
         when(repositoryMock.findAll()).thenReturn(students);
         assertEquals(students, out.getAll());
     }
+
+    @Test
+    void findByAgeBetween() {
+        Student st1 = new Student(1, "st1", 12);
+        Student st2 = new Student(2, "st2", 15);
+        Student st3 = new Student(3, "st3", 17);
+        when(repositoryMock.findByAgeBetween(10, 12)).thenReturn(List.of(st1));
+        when(repositoryMock.findByAgeBetween(12, 15)).thenReturn(List.of(st1, st2));
+        when(repositoryMock.findByAgeBetween(13, 16)).thenReturn(List.of(st2));
+        when(repositoryMock.findByAgeBetween(9, 19)).thenReturn(List.of(st1, st2, st3));
+        when(repositoryMock.findByAgeBetween(9, 11)).thenReturn(List.of());
+
+        assertEquals(List.of(st1), out.findByAgeBetween(10, 12));
+        assertEquals(List.of(st1, st2), out.findByAgeBetween(12, 15));
+        assertEquals(List.of(st2), out.findByAgeBetween(13, 16));
+        assertEquals(List.of(st1, st2, st3), out.findByAgeBetween(9, 19));
+        assertEquals(List.of(), out.findByAgeBetween(9, 11));
+    }
 }

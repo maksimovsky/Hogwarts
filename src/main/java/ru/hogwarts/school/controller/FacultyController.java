@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyServiceImpl;
 
 import java.util.Collection;
@@ -43,19 +44,36 @@ public class FacultyController {
         return validate(service.editFaculty(faculty));
     }
 
-    @GetMapping("color/{color}")
-    public ResponseEntity<Collection<Faculty>> getSameColorFaculties(@PathVariable String color) {
-        Collection<Faculty> faculties = service.getSameColorFaculties(color);
-        if (faculties.size() == 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        return ResponseEntity.ok(faculties);
+    @GetMapping("/color")
+    public ResponseEntity<Collection<Faculty>> getSameColorFaculties(@RequestParam String color) {
+        return validate(service.getSameColorFaculties(color));
     }
 
-    private ResponseEntity<Object> validate(Faculty faculty) {
+    @GetMapping("find")
+    public ResponseEntity<Collection<Faculty>> getByNameOrColor(@RequestParam String s) {
+        return validate(service.getByNameOrColor(s));
+    }
+
+    @GetMapping("{id}/students")
+    public ResponseEntity<Collection<Student>> getStudentsByFacultyId(@PathVariable int id) {
+        Collection<Student> students = service.getStudentsByFacultyId(id);
+        if (students == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok(students);
+    }
+
+    private static ResponseEntity<Object> validate(Faculty faculty) {
         if (faculty == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.ok(faculty);
+    }
+
+    private static ResponseEntity<Collection<Faculty>> validate(Collection<Faculty> faculties) {
+        if (faculties.size() == 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok(faculties);
     }
 }

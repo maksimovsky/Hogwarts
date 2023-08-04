@@ -14,7 +14,7 @@ import ru.hogwarts.school.model.Student;
 
 import java.util.Collection;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class HogwartsApplicationTests {
@@ -40,8 +40,27 @@ class HogwartsApplicationTests {
 
     @Test
     public void testGetAllStudents() {
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/student", String.class))
-                .isNotEmpty();
+        Student student1 = new Student(1, "student1", 15);
+        Student student3 = new Student(8, "student3", 14);
+        Student student5 = new Student(10, "student5", 15);
+        Student student7 = new Student(12, "student7", 13);
+        Student student8 = new Student(13, "student8", 14);
+        Student student9 = new Student(14, "student9", 15);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept", "application/json");
+        headers.set("Authorization", "Bearer JWT TOKEN HERE");
+        HttpEntity<Object> requestEntity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<Collection<Student>> response = restTemplate
+                .exchange("/student",
+                        HttpMethod.GET,
+                        requestEntity,
+                        new ParameterizedTypeReference<>() {
+                        });
+
+        assertThat(response.getBody()).containsExactlyInAnyOrder(student8, student3,
+                student9, student1, student5, student7);
     }
 
     @Test
@@ -115,39 +134,46 @@ class HogwartsApplicationTests {
 
     @Test
     public void testGetSameAgeStudents() {
-        int age = 15;
+        Student student3 = new Student(8, "student3", 14);
+        Student student8 = new Student(13, "student8", 14);
 
+        int age = 14;
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", "application/json");
         headers.set("Authorization", "Bearer JWT TOKEN HERE");
         HttpEntity<Object> requestEntity = new HttpEntity<>(null, headers);
 
         ResponseEntity<Collection<Student>> response = restTemplate
-                .exchange("http://localhost:" + port + "/student/age",
-                HttpMethod.GET,
-                requestEntity,
-                new ParameterizedTypeReference<Collection<Student>>() {
-                }, age);
+                .exchange("/student/age?age=" + age,
+                        HttpMethod.GET,
+                        requestEntity,
+                        new ParameterizedTypeReference<>() {
+                        });
 
-        Collection<Student> students = response.getBody();
-        System.out.println(students);
-
-//        ResponseEntity<Collection<Student>> response = this.restTemplate
-//                .exchange("http://localhost:" + port + "/student/age",
-//                        HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
-
-//        ResponseEntity<Student[]> response = this.restTemplate
-//                .getForEntity("http://localhost:" + port + "/student/age", Student[].class, age);
-
-
-//        System.out.println();
-//        System.out.println(response.getBody());
-//        System.out.println();
+        assertThat(response.getBody()).containsExactlyInAnyOrder(student8, student3);
     }
 
     @Test
     public void testGetByAge() {
+        Student student3 = new Student(8, "student3", 14);
+        Student student7 = new Student(12, "student7", 13);
+        Student student8 = new Student(13, "student8", 14);
 
+        int from = 10;
+        int to = 14;
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept", "application/json");
+        headers.set("Authorization", "Bearer JWT TOKEN HERE");
+        HttpEntity<Object> requestEntity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<Collection<Student>> response = restTemplate
+                .exchange("/student/ages?from=" + from + "&to=" + to,
+                        HttpMethod.GET,
+                        requestEntity,
+                        new ParameterizedTypeReference<>() {
+                        });
+
+        assertThat(response.getBody()).containsExactlyInAnyOrder(student7, student3, student8);
     }
 
     @Test
@@ -167,8 +193,25 @@ class HogwartsApplicationTests {
 
     @Test
     public void testGetAllFaculties() {
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty", String.class))
-                .isNotEmpty();
+        Faculty faculty1 = new Faculty(1, "faculty1", "color1");
+        Faculty faculty2 = new Faculty(2, "faculty2", "color2");
+        Faculty faculty3 = new Faculty(3, "faculty3", "color3");
+        Faculty faculty4 = new Faculty(4, "faculty4", "color1");
+        Faculty faculty5 = new Faculty(5, "faculty5", "test_y2");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept", "application/json");
+        headers.set("Authorization", "Bearer JWT TOKEN HERE");
+        HttpEntity<Object> requestEntity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<Collection<Faculty>> response = restTemplate
+                .exchange("/faculty",
+                        HttpMethod.GET,
+                        requestEntity,
+                        new ParameterizedTypeReference<>() {
+                        });
+
+        assertThat(response.getBody()).containsExactlyInAnyOrder(faculty3, faculty4, faculty2, faculty1, faculty5);
     }
 
     @Test
@@ -242,16 +285,64 @@ class HogwartsApplicationTests {
 
     @Test
     public void testGetSameColorFaculties() {
+        Faculty faculty1 = new Faculty(1, "faculty1", "color1");
+        Faculty faculty4 = new Faculty(4, "faculty4", "color1");
 
+        String color = "color1";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept", "application/json");
+        headers.set("Authorization", "Bearer JWT TOKEN HERE");
+        HttpEntity<Object> requestEntity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<Collection<Faculty>> response = restTemplate
+                .exchange("/faculty/color?color=" + color,
+                        HttpMethod.GET,
+                        requestEntity,
+                        new ParameterizedTypeReference<>() {
+                        });
+
+        assertThat(response.getBody()).containsExactlyInAnyOrder(faculty1, faculty4);
     }
 
     @Test
     public void testGetByNameOrColor() {
+        Faculty faculty2 = new Faculty(2, "faculty2", "color2");
+        Faculty faculty5 = new Faculty(5, "faculty5", "test_y2");
 
+        String s = "y2";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept", "application/json");
+        headers.set("Authorization", "Bearer JWT TOKEN HERE");
+        HttpEntity<Object> requestEntity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<Collection<Faculty>> response = restTemplate
+                .exchange("/faculty/find?s=" + s,
+                        HttpMethod.GET,
+                        requestEntity,
+                        new ParameterizedTypeReference<>() {
+                        });
+
+        assertThat(response.getBody()).containsExactlyInAnyOrder(faculty2, faculty5);
     }
 
     @Test
     public void testGetStudentsByFacultyId() {
+        Student student1 = new Student(1, "student1", 15);
+        Student student8 = new Student(13, "student8", 14);
 
+        int facultyId = 2;
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept", "application/json");
+        headers.set("Authorization", "Bearer JWT TOKEN HERE");
+        HttpEntity<Object> requestEntity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<Collection<Student>> response = restTemplate
+                .exchange("/faculty/" + facultyId + "/students",
+                        HttpMethod.GET,
+                        requestEntity,
+                        new ParameterizedTypeReference<>() {
+                        });
+
+        assertThat(response.getBody()).containsExactlyInAnyOrder(student1, student8);
     }
 }

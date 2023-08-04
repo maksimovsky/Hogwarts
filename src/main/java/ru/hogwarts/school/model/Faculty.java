@@ -59,6 +59,16 @@ public class Faculty {
     }
 
     @Override
+    public String toString() {
+        return "Faculty{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", color='" + color + '\'' +
+                ", students=" + students +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

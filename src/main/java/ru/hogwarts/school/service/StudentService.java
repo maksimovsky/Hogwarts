@@ -19,4 +19,10 @@ public interface StudentService {
     Collection<Student> findByAgeBetween(int from, int to);
 
     Faculty getFacultyByStudentId(int id);
+
+    int getCount();
+
+    double getAverageAge();
+
+    Collection<Student> getLast5Students();
 }

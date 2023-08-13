@@ -231,6 +231,47 @@ class HogwartsApplicationTests {
                 .andExpect(jsonPath("$.name").value(student2.getFaculty().getName()));
     }
 
+    @Test
+    public void getCountTest() throws Exception {
+        when(studentRepository.getCount()).thenReturn(4);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/student/count")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(4));
+    }
+
+    @Test
+    public void getAverageAgeTest() throws Exception {
+        when(studentRepository.getAverageAge()).thenReturn(14.5);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/student/avg_age")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(14.5));
+    }
+
+    @Test
+    public void getLast5StudentsTest() throws Exception {
+        final Student student6 = new Student(6, "student6", 13);
+        final Student student7 = new Student(7, "student7", 17);
+        final Student student8 = new Student(8, "student8", 14);
+        Collection<Student> expected = List.of(student4, student5, student6, student7, student8);
+
+        when(studentRepository.getLast5Students()).thenReturn(expected);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/student/last5")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].name").value(student4.getName()))
+                .andExpect(jsonPath("$.[1].name").value(student5.getName()))
+                .andExpect(jsonPath("$.[2].name").value(student6.getName()))
+                .andExpect(jsonPath("$.[3].name").value(student7.getName()))
+                .andExpect(jsonPath("$.[4].name").value(student8.getName()));
+    }
+
     //////////////////////// FacultyController tests ////////////////////////
 
     @Test

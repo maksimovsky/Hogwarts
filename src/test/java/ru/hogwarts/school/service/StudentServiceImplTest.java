@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
@@ -113,5 +114,42 @@ class StudentServiceImplTest {
         assertEquals(List.of(st2), out.findByAgeBetween(13, 16));
         assertEquals(List.of(st1, st2, st3), out.findByAgeBetween(9, 19));
         assertEquals(List.of(), out.findByAgeBetween(9, 11));
+    }
+
+    @Test
+    void getFacultyByStudentIdTest() {
+        Student student = new Student(1, "studentName", 16);
+        Faculty faculty = new Faculty(1, "facultyName", "color");
+        student.setFaculty(faculty);
+        when(repositoryMock.findById(anyInt())).thenReturn(Optional.of(student));
+
+        assertEquals(faculty, out.getFacultyByStudentId(1));
+    }
+
+    @Test
+    void getCountTest() {
+        when(repositoryMock.getCount()).thenReturn(4);
+        assertEquals(4, out.getCount());
+    }
+
+    @Test
+    void getAverageAgeTest() {
+        when(repositoryMock.getAverageAge()).thenReturn(14.5);
+        assertEquals(14.5, out.getAverageAge());
+    }
+
+    @Test
+    void getLast5StudentsTest() {
+        Student st1 = new Student(1, "st1", 14);
+        Student st2 = new Student(2, "st2", 15);
+        Student st3 = new Student(3, "st3", 16);
+        Student st4 = new Student(4, "st4", 14);
+        Student st5 = new Student(5, "st5", 15);
+        Student st6 = new Student(6, "st6", 13);
+        Student st7 = new Student(7, "st7", 14);
+        Collection<Student> expected = List.of(st3, st4, st5, st6, st7);
+        when(repositoryMock.getLast5Students()).thenReturn(expected);
+
+        assertEquals(expected, out.getLast5Students());
     }
 }

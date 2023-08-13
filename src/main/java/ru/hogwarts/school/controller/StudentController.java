@@ -58,6 +58,21 @@ public class StudentController {
         return validate(service.getFacultyByStudentId(id));
     }
 
+    @GetMapping("/count")
+    public int getCount() {
+        return service.getCount();
+    }
+
+    @GetMapping("/avg_age")
+    public double getAverageAge() {
+        return service.getAverageAge();
+    }
+
+    @GetMapping("/last5")
+    public Collection<Student> getLast5Students() {
+        return service.getLast5Students();
+    }
+
     private static ResponseEntity<Object> validate(Object o) {
         if (o == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -66,7 +81,7 @@ public class StudentController {
     }
 
     private static ResponseEntity<Collection<Student>> validate(Collection<Student> students) {
-        if (students.size() == 0) {
+        if (students.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.ok(students);

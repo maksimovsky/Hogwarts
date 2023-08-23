@@ -80,8 +80,31 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public double getAverageAge2() {
+        logger.debug("Getting average age of students with stream");
+        return repository.findAll()
+                .stream()
+                .parallel()
+                .mapToInt(Student::getAge)
+                .average().orElse(0);
+    }
+
+    @Override
     public Collection<Student> getLast5Students() {
         logger.debug("Getting last 5 students");
         return repository.getLast5Students();
+    }
+
+    @Override
+    public Collection<String> getNamesWhichStartsWithA() {
+        logger.debug("Getting names which starts with 'A'");
+        return repository.findAll()
+                .stream()
+                .parallel()
+                .map(Student::getName)
+                .map(String::toUpperCase)
+                .filter(s -> s.startsWith("A"))
+                .sorted()
+                .toList();
     }
 }

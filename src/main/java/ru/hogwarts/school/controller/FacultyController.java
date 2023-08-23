@@ -63,6 +63,11 @@ public class FacultyController {
         return ResponseEntity.ok(students);
     }
 
+    @GetMapping("/longest_name")
+    public String getLongestName() {
+        return service.getLongestName();
+    }
+
     private static ResponseEntity<Object> validate(Faculty faculty) {
         if (faculty == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

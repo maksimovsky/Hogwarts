@@ -84,7 +84,18 @@ public class StudentController {
         if (names.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-        return ResponseEntity.ok(names);    }
+        return ResponseEntity.ok(names);
+    }
+
+    @GetMapping("/streams")
+    public void getNamesInDifferentStreams() {
+        service.getNamesInDifferentStreams();
+    }
+
+    @GetMapping("/streams2")
+    public void getNamesInDifferentStreams2() {
+        service.getNamesInDifferentStreams2();
+    }
 
     private static ResponseEntity<Object> validate(Object o) {
         if (o == null) {

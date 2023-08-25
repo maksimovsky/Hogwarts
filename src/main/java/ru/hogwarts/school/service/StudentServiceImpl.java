@@ -107,4 +107,59 @@ public class StudentServiceImpl implements StudentService {
                 .sorted()
                 .toList();
     }
+
+    @Override
+    public void getNamesInDifferentStreams() {
+        printNameByIndex(0);
+        printNameByIndex(1);
+
+        new Thread(() -> {
+            printNameByIndex(2);
+            printNameByIndex(3);
+        }).start();
+
+        new Thread(() -> {
+            printNameByIndex(4);
+            printNameByIndex(5);
+        }).start();
+    }
+
+    private void printNameByIndex(int index) {
+        String[] names = repository.findNamesOrderById();
+        System.out.println(names[index]);
+
+//        For loading
+//        String s = "";
+//        for (int i = 0; i < 200_000; i++) {
+//            s += i;
+//        }
+    }
+
+    @Override
+    public void getNamesInDifferentStreams2() {
+        printNameByIndex2(0);
+        printNameByIndex2(1);
+
+        new Thread(() -> {
+            printNameByIndex2(2);
+            printNameByIndex2(3);
+        }).start();
+
+        new Thread(() -> {
+            printNameByIndex2(4);
+            printNameByIndex2(5);
+        }).start();
+    }
+
+    private synchronized void printNameByIndex2(int index) {
+        String[] names = repository.findNamesOrderById();
+        System.out.println(names[index]);
+
+
+//        For loading
+//        String s = "";
+//        for (int i = 0; i < 100_000; i++) {
+//            s += i;
+//        }
+    }
 }

@@ -29,4 +29,8 @@ public interface StudentService {
     Collection<String> getNamesWhichStartsWithA();
 
     double getAverageAge2();
+
+    void getNamesInDifferentStreams();
+
+    void getNamesInDifferentStreams2();
 }

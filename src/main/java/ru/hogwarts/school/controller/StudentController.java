@@ -68,10 +68,23 @@ public class StudentController {
         return service.getAverageAge();
     }
 
-    @GetMapping("/last5")
-    public Collection<Student> getLast5Students() {
-        return service.getLast5Students();
+    @GetMapping("/avg_age2")
+    public double getAverageAge2() {
+        return service.getAverageAge2();
     }
+
+    @GetMapping("/last5")
+    public ResponseEntity<Collection<Student>> getLast5Students() {
+        return validate(service.getLast5Students());
+    }
+
+    @GetMapping("/names")
+    public ResponseEntity<Collection<String>> getNamesWhichStartsWithA() {
+        Collection<String> names = service.getNamesWhichStartsWithA();
+        if (names.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok(names);    }
 
     private static ResponseEntity<Object> validate(Object o) {
         if (o == null) {

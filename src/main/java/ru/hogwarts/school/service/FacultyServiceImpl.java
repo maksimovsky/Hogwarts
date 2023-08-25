@@ -8,6 +8,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.Collection;
+import java.util.Comparator;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
@@ -68,5 +69,15 @@ public class FacultyServiceImpl implements FacultyService {
             return null;
         }
         return faculty.getStudents();
+    }
+
+    @Override
+    public String getLongestName() {
+        logger.debug("Getting the longest name");
+        return repository.findAll()
+                .stream()
+                .parallel()
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length)).orElse("");
     }
 }
